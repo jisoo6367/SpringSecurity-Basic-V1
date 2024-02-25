@@ -1,6 +1,8 @@
 package com.cos.security1.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,6 +66,19 @@ public class IndexController {
 		return "redirect:/loginForm";
 	}
 	
+	
+	@Secured("ROLE_ADMIN")
+	@GetMapping("/info")
+	public @ResponseBody String info() {
+		return "개인정보";
+	}
 
+	@PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')") // 메서드 실행 직전 실행됨, "ROLE_ADMIN"이렇게 적는거 아님!
+	//하나 할거면 @Secured 쓰고 여러개 할거면 @PreAuthorize가 낫다
+	@GetMapping("/data")
+	public @ResponseBody String data() {
+		return "데이터 정보";
+	}
 
+	
 }

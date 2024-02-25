@@ -22,6 +22,10 @@ public class User {
 	private String password;
 	private String email;
 	private String role; // ROLE_USER, ROLE_ADMIN
+	
+	private String provider; //google
+	private String providerId; //sub=113341760605204311861
+	
 	@CreationTimestamp
 	private Timestamp createDate;
 
