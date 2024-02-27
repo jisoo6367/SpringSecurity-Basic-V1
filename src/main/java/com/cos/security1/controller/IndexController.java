@@ -1,14 +1,20 @@
 package com.cos.security1.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cos.security1.config.auth.PrincipalDetails;
 import com.cos.security1.model.User;
 import com.cos.security1.repository.UserRepository;
 
@@ -21,6 +27,35 @@ public class IndexController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
+    @GetMapping("/test/login")
+    public @ResponseBody String testLogin(//DI (의존성 주입)
+    		Authentication authentication, 
+    		@AuthenticationPrincipal PrincipalDetails userDetails) {
+    							//PrincipalDetails.java 에서 implements UserDetails했기 때문에 UserDetails 타입말고 PrincipalDetails로 해도 되는거임
+    	System.out.println("/test/login============");
+    	System.out.println("authentication: "+ authentication); //리턴타입: object
+    	System.out.println("authentication.getPrincipal(): "+ authentication.getPrincipal());
+    	
+    	PrincipalDetails principalDetails =(PrincipalDetails) authentication.getPrincipal(); //down casting
+    	System.out.println("getUser: "+ principalDetails.getUser());
+    	
+    	System.out.println("userDetails: "+ userDetails.getUser());
+    	
+    	return "세션 정보 확인하기";
+    }
+    
+    
+    @GetMapping("/test/oauth/login")
+    public @ResponseBody String testOAuthLogin(//DI (의존성 주입)
+    		Authentication authentication) {
+    	
+    	System.out.println("/test/oauth/login============");
+    	OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+    	System.out.println("authentication: "+ oauth2User.getAttributes());
+    	
+    	return "OAuth 세션 정보 확인하기";
+    }
+    
 	@GetMapping({"","/"})
 	public String index() {
 		// 머스테치 기본폴더 src/main/resources/
