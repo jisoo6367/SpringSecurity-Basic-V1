@@ -2,6 +2,7 @@ package com.cos.security1.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -29,17 +30,22 @@ public class IndexController {
 	
     @GetMapping("/test/login")
     public @ResponseBody String testLogin(//DI (의존성 주입)
-    		Authentication authentication, 
-    		@AuthenticationPrincipal PrincipalDetails userDetails) {
+    		Authentication authentication 
+    		//@AuthenticationPrincipal PrincipalDetails userDetails
+    		) {
     							//PrincipalDetails.java 에서 implements UserDetails했기 때문에 UserDetails 타입말고 PrincipalDetails로 해도 되는거임
     	System.out.println("/test/login============");
     	System.out.println("authentication: "+ authentication); //리턴타입: object
     	System.out.println("authentication.getPrincipal(): "+ authentication.getPrincipal());
     	
     	PrincipalDetails principalDetails =(PrincipalDetails) authentication.getPrincipal(); //down casting
-    	System.out.println("getUser: "+ principalDetails.getUser());
+
+
     	
-    	System.out.println("userDetails: "+ userDetails.getUser());
+    	
+    	System.out.println("principalDetails.getUser() : "+ principalDetails.getUser());
+    	
+    	//System.out.println("userDetails: "+ userDetails.getUser());
     	
     	return "세션 정보 확인하기";
     }
@@ -47,11 +53,15 @@ public class IndexController {
     
     @GetMapping("/test/oauth/login")
     public @ResponseBody String testOAuthLogin(//DI (의존성 주입)
-    		Authentication authentication) {
+    		Authentication authentication,
+    		@AuthenticationPrincipal OAuth2User oauth) {
     	
     	System.out.println("/test/oauth/login============");
     	OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-    	System.out.println("authentication: "+ oauth2User.getAttributes());
+    	System.out.println("authentication: "+ oauth2User.getAttributes()); // Map<String, Object>
+    	//{sub=113341760605204311861, name=홍지수, given_name=지수, family_name=홍, picture=https://lh3.googleusercontent.com/a/ACg8ocKiSpCZIJTJlb37vzWuanMgGixX8dq01r7dTkL9N3Qk=s96-c, email=jisunalazzang@gmail.com, email_verified=true, locale=ko}
+    	
+    	System.out.println("oauth2User: "+ oauth.getAttributes());
     	
     	return "OAuth 세션 정보 확인하기";
     }
@@ -63,8 +73,11 @@ public class IndexController {
 		return "index";
 	}
 	
+	// 일반로그인, OAuth 로그인 둘다 PrincipalDetails로 받을 수 있음. 둘다 implements했으니까
 	@GetMapping("/user")
-	public @ResponseBody String user() {
+	public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		System.out.println("principalDetails.getUser : "+ principalDetails.getUser());
+		//User(id=3, username=ssar, password=$2a$10$nbm8MAHLgbEF4xnE.FxkteRPAQFExI7vfdSegLGAVlZqQs9gLlNTm, email=ssar@nate.com, role=ROLE_USER, provider=null, providerId=null, createDate=2024-02-25 17:10:01.45085)
 		return "user";
 	}
 	

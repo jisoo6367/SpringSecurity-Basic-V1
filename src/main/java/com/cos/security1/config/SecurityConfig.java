@@ -54,8 +54,7 @@ public class SecurityConfig {
         .oauth2Login((oauth2) -> oauth2 // OAuth2 로그인 설정시작
         		.loginPage("/loginForm")
         		.userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
-        				.userService(principalOauth2UserService))
-); //OAuth 로그인 시 사용자 정보를 가져오는 엔드포인트와 사용자 서비스를 설정
+        				.userService(principalOauth2UserService))); //OAuth 로그인 시 사용자 정보를 가져오는 엔드포인트와 사용자 서비스를 설정
 
 
         //구글 로그인이 완료된 다음 후처리가 필요함. Tip! 코드X (엑세스토큰+사용자프로필정보 O)

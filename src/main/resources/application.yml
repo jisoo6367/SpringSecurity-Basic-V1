@@ -8,6 +8,9 @@ server:
       force: true
       
 spring:
+  main:
+    allow-circular-references: true
+    
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/db_test?serverTimezone=Asia/Seoul
@@ -37,5 +40,12 @@ spring:
             scope:
             - email
             - profile
+            
+          facebook:
+            client-id: 2382923761892831
+            client-secret: 19a0cf40742adc98894ce3e7f0c0b459
+            scope:
+            - email
+            - public_profile
             
             

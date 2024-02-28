@@ -19,6 +19,7 @@ public class PrincipalDetailsService implements UserDetailsService {
 	
 	
 	// 시큐리티 session (내부 Authentication (내부 UserDatails))
+	// 함수 종료시 @AuthenticationPrincipal 어노테이션이 만들어진다.
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		//로그인 하는 폼태그 안 인풋의 name이 username이 아닌 경우에는 못 받아오기 때문에
