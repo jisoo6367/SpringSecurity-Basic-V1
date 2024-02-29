@@ -1,5 +1,7 @@
 package com.cos.security1.config.oauth;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.cos.security1.config.auth.PrincipalDetails;
 import com.cos.security1.config.oauth.provider.FacebookUserInfo;
 import com.cos.security1.config.oauth.provider.GoogleUserInfo;
+import com.cos.security1.config.oauth.provider.NaverUserInfo;
 import com.cos.security1.config.oauth.provider.OAuth2UserInfo;
 import com.cos.security1.model.User;
 import com.cos.security1.repository.UserRepository;
@@ -39,6 +42,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 		System.out.println("getAttributes : " + oauth2User.getAttributes());
 		//구글 : {sub=113341760605204311861, name=홍지수, given_name=지수, family_name=홍, picture=https://lh3.googleusercontent.com/a/ACg8ocKiSpCZIJTJlb37vzWuanMgGixX8dq01r7dTkL9N3Qk=s96-c, email=jisunalazzang@gmail.com, email_verified=true, locale=ko}
 		//페이스북 : {id=6920624181394071, name=홍지수, email=jisunala@hanmail.net}
+		//네이버 : {resultcode=00, messsage=success, response={id=171131346, eamil=..., name=...}}
 		
 		//회원가입을 강제로 진행
 		OAuth2UserInfo oAuth2UserInfo = null;
@@ -48,8 +52,11 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 		}else if (userRequest.getClientRegistration().getRegistrationId().equals("facebook")){
 			System.out.println("페이스북 로그인 요청");
 			oAuth2UserInfo = new FacebookUserInfo(oauth2User.getAttributes());
+		}else if (userRequest.getClientRegistration().getRegistrationId().equals("naver")){
+			System.out.println("네이버 로그인 요청");
+			oAuth2UserInfo = new NaverUserInfo((Map)oauth2User.getAttributes().get("response"));
 		}else {
-			System.out.println("소셜 로그인은 구글과 페이스북만 지원합니다!!");
+			System.out.println("소셜 로그인은 구글, 페이스북, 네이버만 지원합니다!!");
 		}
 		
 		
